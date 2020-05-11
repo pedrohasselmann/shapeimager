@@ -144,14 +144,15 @@ Load the Imager Class to compute the FOV:
 
 ``Im = Imager(S, CamMatrix, boresight, sun, sc, visible=True, illuminated=True, raytrace=False, shaded=4, occ=4)``
 
-flags:
-============== ========================================================
-| visible     |  only visible facets
-| illuminated |  only illuminated facets
-| raytrace    |  higher precision but slower calculation of occlusion
-| shaded      |  >2, shadowing precision
-| occ         |  >2, occlusion precision with raytrace=False
-============== ========================================================
++-------------+--------------------------------------------------------+
+|  flags      |                                                        |
+==============+========================================================
+| visible     |  only visible facets                                   |
+| illuminated |  only illuminated facets                               |
+| raytrace    |  higher precision but slower calculation of occlusions |
+| shaded      |  >2, shadowing precision                               |
+| occ         |  >2, occlusion precision with raytrace=False           |
++-------------+--------------------------------------------------------+
 
 Visualize mesh and check if the FOV is correct:
 
