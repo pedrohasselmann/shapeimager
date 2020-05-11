@@ -94,11 +94,17 @@ First, ensure yourself to have all required SPICE Kernels, mk files and DTMs for
 
 In spec.py you must edit the path files:
 ``"obj"    : Object name or label.``
+
 ``"folder" : Directory of calibrated and aligned images.```
+
 ``"core"   : Directory of renderings and geo files.``
+
 ``"aux"    : Directory of auxiliary .dat or .txt files and also .obj Shape Model.``
+
 ``"kern"   : Directorty of NAIF/SPICE Kernels.``
+
 ``"prod"   : Directory where products and secondary data structures are stored.``
+
 ``"filter" : filter name.``
 
 
@@ -107,23 +113,32 @@ In your script call:
 
 Load SPICE kernels:
 ``spc = pos.from_spice(body=[BODY CODE],obs=[S/C CODE],ins=[INSTRUMENT CODE])``
+
 ``spc.furnish('[FILENAME].mk')``
 
 Load the DTM or Shape Model:
 ``sha = "[DTM NAME].obj"``
+
 ``S = ShapeModel(sha, comments=[IF THERE ARE COMMENTS IN THE FILE])``
+
 ``S.normal_vector(True)`` 
+
 It pre-loads the DTM and pre-calculate the normal vectors.
 
 Chose a date:
+
 ``spc.load_time('YYYY-MM-DDThh:mm:ss.sss')``
+
 ``sun = spc.solar_coord(spc.body_frame)[0]``
+
 ``sc = spc.sc_coord(spc.body_frame)[0]``
 
 Compute the Camera Matrix and boresight vector:
+
 ``FOV, CamMatrix, boresight = spc.orex_instrument_frame()``
 
 Load the Imager Class to compute the FOV:
+
 ``Im = Imager(S, CamMatrix, boresight, sun, sc, visible=True, illuminated=True, raytrace=False, shaded=4, occ=4)``
 
 flags:
@@ -134,17 +149,23 @@ shaded      :: >2, shadowing precision
 occ         :: >2, occlusion precision with raytrace=False
 
 Visualize mesh and check if the FOV is correct:
+
 ``Im.plot_v(FOV, ccd, 'test', 1, save=False)``
+
 ccd :: 2-tuple with the CCD dimensions.
 
 Run the Imaging function:
+
 ``Im.imaging(FOV, ccd)``
+
 ``XYZ = Im.onto_obj_frame()``
 
 Make a 2d-array in the FOV using a scattering law:
 
 ``def ls_disk(x):``
+
   ``from numpy import cos``
+  
   ``return 2e0*cos(x.inc_)/(cos(x.inc_)+cos(x.emi_))``
 
 ``property_image_ = Im.broadcast2(ls_disk(Im))``
