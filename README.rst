@@ -96,20 +96,21 @@ First, ensure yourself to have all required SPICE Kernels, mk files and DTMs for
 
 In spec.py you must edit the path files:
 
+::
 
-  ``"obj"    : Object name or label.``
+  "obj"    : Object name or label.
 
-  ``"folder" : Directory of calibrated and aligned images.```
+  "folder" : Directory of calibrated and aligned images.
 
-  ``"core"   : Directory of renderings and geo files.``
+  "core"   : Directory of renderings and geo files.
 
-  ``"aux"    : Directory of auxiliary .dat or .txt files and also .obj Shape Model.``
+  "aux"    : Directory of auxiliary .dat or .txt files and also .obj Shape Model.
 
-  ``"kern"   : Directory of NAIF/SPICE Kernels.``
+  "kern"   : Directory of NAIF/SPICE Kernels.
 
-  ``"prod"   : Directory where products and secondary data structures are stored.``
+  "prod"   : Directory where products and secondary data structures are stored.
 
-  ``"filter" : filter name.``
+  "filter" : filter name.
 
 
 In your script call:
@@ -117,34 +118,43 @@ In your script call:
 
 Load SPICE kernels:
 
-``spc = pos.from_spice(body=[BODY CODE],obs=[S/C CODE],ins=[INSTRUMENT CODE])``
+::
 
-``spc.furnish('[FILENAME].mk')``
+spc = pos.from_spice(body=[BODY CODE],obs=[S/C CODE],ins=[INSTRUMENT CODE])
+
+spc.furnish('[FILENAME].mk')
 
 Load the DTM or Shape Model:
-``sha = "[DTM NAME].obj"``
 
-``S = ShapeModel(sha, comments=[IF THERE ARE COMMENTS IN THE FILE])``
+::
 
-``S.normal_vector(True)`` 
+  S = ShapeModel('[DTM NAME].obj', comments=[COMMENTED LINES])
+
+  S.normal_vector(True)
 
 It pre-loads the DTM and pre-calculates the normal vectors.
 
 Chose a date:
 
-``spc.load_time('YYYY-MM-DDThh:mm:ss.sss')``
+::
 
-``sun = spc.solar_coord(spc.body_frame)[0]``
+  spc.load_time('YYYY-MM-DDThh:mm:ss.sss')
 
-``sc = spc.sc_coord(spc.body_frame)[0]``
+  sun = spc.solar_coord(spc.body_frame)[0]
+
+  sc = spc.sc_coord(spc.body_frame)[0]
 
 Compute the Camera Matrix and boresight vector:
 
-``FOV, CamMatrix, boresight = spc.orex_instrument_frame()``
+::
+
+  FOV, CamMatrix, boresight = spc.orex_instrument_frame()
 
 Load the Imager Class to compute the FOV:
 
-``Im = Imager(S, CamMatrix, boresight, sun, sc, visible=True, illuminated=True, raytrace=False, shaded=4, occ=4)``
+::
+
+  Im = Imager(S, CamMatrix, boresight, sun, sc, visible=True, illuminated=True, raytrace=False, shaded=4, occ=4)
 
 
 +-------------+--------------------------------------------------------+
@@ -160,7 +170,9 @@ Load the Imager Class to compute the FOV:
 
 Visualize mesh and check if the FOV is correct:
 
-``Im.plot_v(FOV, ccd, 'test', 1, save=False)``
+::
+
+  Im.plot_v(FOV, ccd, 'test', 1, save=False)
 
 ccd :: 2-tuple with the CCD dimensions.
 
@@ -172,13 +184,15 @@ Run the Imaging function:
 
 Make a 2d-array in the FOV using a scattering law:
 
-  ``def ls_disk(x):``
+::
 
-    ``from numpy import cos``
+  def ls_disk(x):
+
+    from numpy import cos
   
-    ``return 2e0*cos(x.inc_)/(cos(x.inc_)+cos(x.emi_))``
+    return 2e0*cos(x.inc_)/(cos(x.inc_)+cos(x.emi_))
 
-``property_image_ = Im.broadcast2(ls_disk(Im))``
+  property_image_ = Im.broadcast2(ls_disk(Im))
 
 
 
