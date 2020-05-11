@@ -148,7 +148,7 @@ Compute the Camera Matrix and boresight vector:
 
 ::
 
-  FOV, CamMatrix, boresight = spc.orex_instrument_frame()
+  FOV, CamMatrix, boresight = spc.instrument_frame()
 
 Load the Imager Class to compute the FOV:
 
