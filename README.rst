@@ -101,7 +101,7 @@ In spec.py you must edit the path files:
 
 ``"aux"    : Directory of auxiliary .dat or .txt files and also .obj Shape Model.``
 
-``"kern"   : Directorty of NAIF/SPICE Kernels.``
+``"kern"   : Directory of NAIF/SPICE Kernels.``
 
 ``"prod"   : Directory where products and secondary data structures are stored.``
 
@@ -124,7 +124,7 @@ Load the DTM or Shape Model:
 
 ``S.normal_vector(True)`` 
 
-It pre-loads the DTM and pre-calculate the normal vectors.
+It pre-loads the DTM and pre-calculates the normal vectors.
 
 Chose a date:
 
@@ -143,16 +143,17 @@ Load the Imager Class to compute the FOV:
 ``Im = Imager(S, CamMatrix, boresight, sun, sc, visible=True, illuminated=True, raytrace=False, shaded=4, occ=4)``
 
 flags:
-
-visible     :: only visible facets
-
-illuminated :: only illuminated facets
-
-raytrace    :: higher precision but slower calculation of occlusion
-
-shaded      :: >2, shadowing precision
-
-occ         :: >2, occlusion precision with raytrace=False
+============ ===================
+visible        only visible facets
+============ ===================
+illuminated    only illuminated facets
+============ ===================
+raytrace       higher precision but slower calculation of occlusion
+============ ===================
+shaded         >2, shadowing precision
+============ ===================
+occ            >2, occlusion precision with raytrace=False
+============ ===================
 
 Visualize mesh and check if the FOV is correct:
 
