@@ -73,8 +73,8 @@ Soon support for Python 3.
 Publications with Shapeimager
 ----------------------------
 
-Hasselmann et al. (2019). Pronounced morphological changes in a southern active zone on comet 67P/Churyumov-Gerasimenko. Astronomy & Astrophysics, Volume 630, id.A8, 19 pp.
-Hasselmann et al. (2020). Modeling first-order scattering processes from OSIRIS-REx color images of the rough surface of asteroid (101955) Bennu. Submitted to Icarus Journal. Soon.
+ - Hasselmann et al. (2019). Pronounced morphological changes in a southern active zone on comet 67P/Churyumov-Gerasimenko. Astronomy & Astrophysics, Volume 630, id.A8, 19 pp.
+ - Hasselmann et al. (2020). Modeling first-order scattering processes from OSIRIS-REx color images of the rough surface of asteroid (101955) Bennu. Submitted to Icarus Journal. Soon.
 
 
 Installation
@@ -120,9 +120,9 @@ Load SPICE kernels:
 
 ::
 
-spc = pos.from_spice(body=[BODY CODE],obs=[S/C CODE],ins=[INSTRUMENT CODE])
+  spc = pos.from_spice(body=[BODY CODE],obs=[S/C CODE],ins=[INSTRUMENT CODE])
 
-spc.furnish('[FILENAME].mk')
+  spc.furnish('[FILENAME].mk')
 
 Load the DTM or Shape Model:
 
@@ -156,16 +156,15 @@ Load the Imager Class to compute the FOV:
 
   Im = Imager(S, CamMatrix, boresight, sun, sc, visible=True, illuminated=True, raytrace=False, shaded=4, occ=4)
 
-
-+-------------+--------------------------------------------------------+
-|  flags      |                                                        |
-==============+========================================================+
-| visible     |  only visible facets                                   |
-| illuminated |  only illuminated facets                               |
-| raytrace    |  higher precision but slower calculation of occlusions |
-| shaded      |  >2, shadowing precision                               |
-| occ         |  >2, occlusion precision with raytrace=False           |
-+-------------+--------------------------------------------------------+
+============== ========================================================
+  flags                       description                            
+============== ========================================================
+ visible          only visible facets                                   
+ illuminated      only illuminated facets                               
+ raytrace         higher precision but slower calculation of occlusions 
+ shaded           >2, shadowing precision                               
+ occ              >2, occlusion precision with raytrace=False           
+============== ========================================================
 
 
 Visualize mesh and check if the FOV is correct:
@@ -178,11 +177,17 @@ ccd :: 2-tuple with the CCD dimensions.
 
 Run the Imaging function:
 
-``Im.imaging(FOV, ccd)``
+::
 
-``XYZ = Im.onto_obj_frame()``
+  Im.imaging(FOV, ccd)
 
-Make a 2d-array in the FOV using a scattering law:
+Get the Cartesian coordinates as image cube, for geo-referencing:
+
+::
+
+  XYZ = Im.onto_obj_frame()
+
+Make a FOV image applying a scattering law to compute surface brightness:
 
 ::
 
