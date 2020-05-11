@@ -95,19 +95,21 @@ First Usage
 First, ensure yourself to have all required SPICE Kernels, mk files and DTMs for your analysis.
 
 In spec.py you must edit the path files:
-``"obj"    : Object name or label.``
 
-``"folder" : Directory of calibrated and aligned images.```
 
-``"core"   : Directory of renderings and geo files.``
+  ``"obj"    : Object name or label.``
 
-``"aux"    : Directory of auxiliary .dat or .txt files and also .obj Shape Model.``
+  ``"folder" : Directory of calibrated and aligned images.```
 
-``"kern"   : Directory of NAIF/SPICE Kernels.``
+  ``"core"   : Directory of renderings and geo files.``
 
-``"prod"   : Directory where products and secondary data structures are stored.``
+  ``"aux"    : Directory of auxiliary .dat or .txt files and also .obj Shape Model.``
 
-``"filter" : filter name.``
+  ``"kern"   : Directory of NAIF/SPICE Kernels.``
+
+  ``"prod"   : Directory where products and secondary data structures are stored.``
+
+  ``"filter" : filter name.``
 
 
 In your script call:
@@ -144,15 +146,17 @@ Load the Imager Class to compute the FOV:
 
 ``Im = Imager(S, CamMatrix, boresight, sun, sc, visible=True, illuminated=True, raytrace=False, shaded=4, occ=4)``
 
+
 +-------------+--------------------------------------------------------+
 |  flags      |                                                        |
-==============+========================================================
+==============+========================================================+
 | visible     |  only visible facets                                   |
 | illuminated |  only illuminated facets                               |
 | raytrace    |  higher precision but slower calculation of occlusions |
 | shaded      |  >2, shadowing precision                               |
 | occ         |  >2, occlusion precision with raytrace=False           |
 +-------------+--------------------------------------------------------+
+
 
 Visualize mesh and check if the FOV is correct:
 
