@@ -52,18 +52,20 @@ Requirements
 ------------
 
 Shapeimager 0.0.1 is built on Python 2.7 using the following packages:
-- Numpy >1.15
-- Pandas 0.24
-- Scipy >1.2
-- Cython 3.0
-- Astropy 4.0
-- SpiceyPy 2.0 written by `AndrewAnnex <https://github.com/AndrewAnnex/SpiceyPy>`__  (NASA NAIF/SPICE)
-- Shapeimager comes with adapted and incorporated `PyPDS <https://github.com/RyanBalfanz/PyPDS>`__.
+
+  - Numpy >1.15
+  - Pandas 0.24
+  - Scipy >1.2
+  - Cython 3.0
+  - Astropy 4.0
+  - SpiceyPy 2.0 written by `AndrewAnnex <https://github.com/AndrewAnnex/SpiceyPy>`__  (NASA NAIF/SPICE)
+  - Shapeimager comes with adapted and incorporated `PyPDS <https://github.com/RyanBalfanz/PyPDS>`__.
 
 The module "Viewer" will require:
-- Mayavi 4.6
-- PyQt 4 or 5
-- wxPython 3.0
+
+  - Mayavi 4.6
+  - PyQt 4 or 5
+  - wxPython 3.0
 
 Soon support for Python 3.
 
@@ -143,17 +145,13 @@ Load the Imager Class to compute the FOV:
 ``Im = Imager(S, CamMatrix, boresight, sun, sc, visible=True, illuminated=True, raytrace=False, shaded=4, occ=4)``
 
 flags:
-============ ===================
-visible        only visible facets
-============ ===================
-illuminated    only illuminated facets
-============ ===================
-raytrace       higher precision but slower calculation of occlusion
-============ ===================
-shaded         >2, shadowing precision
-============ ===================
-occ            >2, occlusion precision with raytrace=False
-============ ===================
+============== ========================================================
+| visible     |  only visible facets
+| illuminated |  only illuminated facets
+| raytrace    |  higher precision but slower calculation of occlusion
+| shaded      |  >2, shadowing precision
+| occ         |  >2, occlusion precision with raytrace=False
+============== ========================================================
 
 Visualize mesh and check if the FOV is correct:
 
