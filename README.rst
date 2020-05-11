@@ -112,6 +112,7 @@ In your script call:
 ``from shapeimager import *``
 
 Load SPICE kernels:
+
 ``spc = pos.from_spice(body=[BODY CODE],obs=[S/C CODE],ins=[INSTRUMENT CODE])``
 
 ``spc.furnish('[FILENAME].mk')``
@@ -162,11 +163,11 @@ Run the Imaging function:
 
 Make a 2d-array in the FOV using a scattering law:
 
-``def ls_disk(x):``
+  ``def ls_disk(x):``
 
-  ``from numpy import cos``
+    ``from numpy import cos``
   
-  ``return 2e0*cos(x.inc_)/(cos(x.inc_)+cos(x.emi_))``
+    ``return 2e0*cos(x.inc_)/(cos(x.inc_)+cos(x.emi_))``
 
 ``property_image_ = Im.broadcast2(ls_disk(Im))``
 
