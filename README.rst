@@ -166,7 +166,6 @@ Load the Imager Class to compute the FOV:
  occ              >2, occlusion precision with raytrace=False           
 ============== ========================================================
 
-
 Visualize mesh and check if the FOV is correct:
 
 ::
@@ -181,11 +180,27 @@ Run the Imaging function:
 
   Im.imaging(FOV, ccd)
 
+What is calculated by Im.imaging?
+
+====================== ========================================================
+  properties                       description                            
+====================== ========================================================
+ d                       S/C Distance to target                        
+ inc                     Incidence angle                   
+ emi                     Emergence angle  
+ pha                     Phase angle      
+ facetid                 Active facet index
+ solid_angle_inc         Incoming solid angle
+ solid_angle_emi         Oucoming solid angle
+ facet_pix               Link among facets and image pixel
+ facet_image             Image with the central facet index
+====================== ========================================================
+
 Get the Cartesian coordinates as image cube, for geo-referencing:
 
 ::
 
-  XYZ = Im.onto_obj_frame()
+  XYZ = Im.onto_target_frame()
 
 Make a FOV image applying a scattering law to compute surface brightness:
 
@@ -197,7 +212,26 @@ Make a FOV image applying a scattering law to compute surface brightness:
   
     return 2e0*cos(x.inc_)/(cos(x.inc_)+cos(x.emi_))
 
-  property_image_ = Im.broadcast2(ls_disk(Im))
+  property_image = Im.broadcast2(ls_disk(Im))
+
+or
+
+::
+  
+  property_image = Im.broadcast1(ls_disk(Im))  # Less accurate but faster
+  
+Images can be saved into FITS format using:
+  
+::
+  
+  to_fits('test.fit', property_image)
+    
+And Imager properties can be saved into npz format:
+
+::
+
+  to_npz('[LABEL]', 'YYYY-MM-DDThh:mm:ss.sss', Im)
+
 
 
 
