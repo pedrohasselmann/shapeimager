@@ -3,37 +3,12 @@ Shapeimager
 
 Shapeimager is a Python package for scientific FOV simulation from digital terrain models, NAIF SPICE kernels and any detector settings.
 
-+------------------------+-------------------+--------+-----------------+------------+--------------+
-| Continuous Integration | Code Coverage     | Docs   | Chat            |  Citation  |  Code Style  |
-+========================+===================+========+=================+============+==============+
-| |Travis Build Status|  | |Coverage Status| | |Docs| | |Join the chat| | |Citation| |  |Black|     |
-| |Windows Build Status| |                   |        |                 | |JOSS|     |              |
-+------------------------+-------------------+--------+-----------------+------------+--------------+
-
-.. |Travis Build Status| image:: 
-   :alt: Travis - Build Status
-   :target: 
-.. |Windows Build Status| image:: 
-   :alt: Appveyor - Build Status
-   :target: 
-.. |Coverage Status| 
-   :alt: Codecov - Test Coverage
-   :target: 
-.. |Docs| image:: 
-   :alt: Readthedocs - Documentation
-   :target: 
-.. |Join the chat| image:: 
-   :alt: Gitter - Chat room
-   :target: 
-.. |Citation| image:: 
-   :alt: Citation Information: Zenodo
-   :target: 
-.. |JOSS| image:: 
-   :alt: Citation Information: Journal of Open Source Software
-   :target: 
-.. |Black| image:: 
-   :alt: Code Style - Black
-   :target: 
++-------------------+--------+-----------------+------------+--------------+
+| Code Coverage     | Docs   | Chat            |  Citation  |  Code Style  |
++===================+========+=================+============+==============+
+|   Coverage Status |   Docs |   Join the chat | Citation   |              |
++-------------------+--------+-----------------+------------+--------------+
+IN PROGRESS.
 
 Introduction
 ------------
@@ -80,7 +55,8 @@ Publications with Shapeimager
 Installation
 ------------
 
-No installation procedure for now. Just download the source codes and add shapeimager into your work folder.
+No installation procedure for now. 
+Just download the source code and add shapeimager into your working folder.
 
 
 Documentation
