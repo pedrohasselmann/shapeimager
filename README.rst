@@ -18,9 +18,7 @@ for scientific purposes. The tool simulates surfaces at varied observational set
 were originally obtained. 
 
 The main goal is to provide a detailed and precise list of facets that fall inside a given pixel or spectral acquisition, 
-and then, to be able to recover the facet's incidence, emergence, azimuth and phase angles inside that spot.
-
-The procedure is extremely crutial for Bi-directional reflectance distribution analysis of varied terrain ans soils.
+and then, to be able to recover the facet's incidence, emergence, azimuth and phase angles inside that spot. Shapeimager is bridging an extremely crucial procedure for Bi-directional reflectance distribution analysis of varied terrain ans soils. When a disk-resolved is available for the surface of an asteroid or comet, it can be important to study all pixels or spectral acquisitions available, together or separately, to understand how it scatters light and constrain its grain size distribution and mineralogical composition.
 
 Shapeimager is mainly an image simulator, but also works as a "mesh texturing" where every measurement is match with their corresponding facets,
 thus can be used for reproducing RGB images of the body in varied perpectives.
