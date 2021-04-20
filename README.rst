@@ -1,7 +1,7 @@
 Shapeimager
 ===========
 
-Shapeimager is a Python package for scientific FOV simulation from digital terrain models, NAIF SPICE kernels and any detector settings.
+Shapeimager is a Python 3 package for scientific FOV simulation from any digital terrain models, NAIF SPICE kernels, or detector settings.
 
 +-------------------+--------+-----------------+------------+--------------+
 | Code Coverage     | Docs   | Chat            |  Citation  |  Code Style  |
@@ -17,32 +17,33 @@ Shapeimager is a Python Package dedicated to the image and FOV simulations of di
 for scientific purposes. The tool simulates surfaces at varied observational settings, mimicking the conditions in which the data
 were originally obtained. 
 
-The main goal is to provide the list of facets that fall inside a given pixel or spectral acquisition
-and get the incidence, emergence, azimuth and phase angles of the facets in that spot.
+The main goal is to provide a detailed and precise list of facets that fall inside a given pixel or spectral acquisition, 
+and then, to be able to recover the facet's incidence, emergence, azimuth and phase angles inside that spot.
 
-Shapeimager is simulator but also works as a "mesh texturing" where every measurement is match with their corresponding facets.
+The procedure is extremely crutial for Bi-directional reflectance distribution analysis of varied terrain ans soils.
+
+Shapeimager is mainly an image simulator, but also works as a "mesh texturing" where every measurement is match with their corresponding facets,
+thus can be used for reproducing RGB images of the body in varied perpectives.
 
 
 Requirements
 ------------
 
-Shapeimager 0.0.1 is built on Python 2.7 using the following packages:
+Shapeimager 0.1 is built on Python 3.8 using the following packages:
 
   - Numpy >1.15
-  - Pandas 0.24
+  - Pandas >1.0
   - Scipy >1.2
-  - Cython 3.0
-  - Astropy 4.0
-  - SpiceyPy 2.0 written by `AndrewAnnex <https://github.com/AndrewAnnex/SpiceyPy>`__  (NASA NAIF/SPICE)
-  - Shapeimager comes with adapted and incorporated `PyPDS <https://github.com/RyanBalfanz/PyPDS>`__.
+  - Cython >0.29
+  - Astropy >4.0
+  - SpiceyPy >2.0 written by `AndrewAnnex <https://github.com/AndrewAnnex/SpiceyPy>`__  (NASA NAIF/SPICE)
+  - Shapeimager comes with adapted and incorporated `PyPDS <https://github.com/RyanBalfanz/PyPDS>`__ for Python 3.8.
 
-The module "Viewer" will require:
+The module "Viewer" is optional and will require:
 
   - Mayavi 4.6
   - PyQt 4 or 5
   - wxPython 3.0
-
-Soon support for Python 3.
 
 
 Publications with Shapeimager
@@ -54,9 +55,7 @@ Publications with Shapeimager
 
 Installation
 ------------
-
-No installation procedure for now. 
-Just download the source code and add shapeimager into your working folder.
+SOON.
 
 
 Documentation
@@ -68,7 +67,7 @@ In preparation.
 First Usage
 -----------
 
-First, ensure yourself to have all required SPICE Kernels, mk files and DTMs for your analysis.
+First, ensure yourself to have available all required SPICE Kernels, mk files and Digital Terrain Models for your analysis.
 
 In spec.py you must edit the path files:
 
@@ -83,8 +82,6 @@ In spec.py you must edit the path files:
   "aux"    : Directory of auxiliary .dat or .txt files and also .obj Shape Model.
 
   "kern"   : Directory of NAIF/SPICE Kernels.
-
-  "prod"   : Directory where products and secondary data structures are stored.
 
   "filter" : filter name.
 
