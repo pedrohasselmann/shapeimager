@@ -24,6 +24,15 @@ Shapeimager is mainly an image simulator, but also works as a "mesh texturing" w
 thus can be used for reproducing RGB images of the body in varied perpectives.
 
 
+Benchmarks
+----------
+
+Benchmarks with an image with 1024 x 1024 pixels using OSIRIS-REx SPICE Kernels 
+and the asteroid Bennu shapemodel of 786432 facets performs in less than 20 seconds in general.
+Time variations can arise depending on the asteroid distance, shadowing and shapemodel resolution.
+
+
+
 Requirements
 ------------
 
@@ -71,7 +80,6 @@ In spec.py you must edit the path files:
 
 ::
 
-  "obj"    : Object name or label.
 
   "folder" : Directory of calibrated and aligned images.
 
@@ -81,7 +89,6 @@ In spec.py you must edit the path files:
 
   "kern"   : Directory of NAIF/SPICE Kernels.
 
-  "filter" : filter name.
 
 
 In your script call:
@@ -161,6 +168,7 @@ What is calculated by Im.imaging?
  emi                     Emergence angle  
  pha                     Phase angle      
  facetid                 Active facet index
+ facet_area_pix          Portion of facet under a pixel/acquisition
  solid_angle_inc         Incoming solid angle
  solid_angle_emi         Oucoming solid angle
  facet_pix               Link among facets and image pixel
@@ -190,6 +198,12 @@ or
 ::
   
   property_image = Im.broadcast1(ls_disk(Im))  # Less accurate but faster
+  
+or
+
+::
+
+  property_image = Im.broadcast2() # Accurate but slightly less faster
   
 Images can be saved into FITS format using:
   
