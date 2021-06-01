@@ -218,12 +218,19 @@ And Imager properties can be saved into npz format:
 If the flux-calibrated image or acquisition is available, the pixel-facet matching can be performed and stored:
 
 ::
+
   import numpy as np
+  
   image = read_image([IMAGE PATH], channel=0)
-  HDF = Store(columns=['dist', 'pha', 'emi', 's', 'inc'], label=[LABEL])    
+  
+  HDF = Store(columns=['dist', 'pha', 'emi', 's', 'inc'], label=[LABEL]) 
+  
   geo_data = np.load([NPZ FILEPATH], mmap_mode='r')
+  
   HDF.image_dataframe([VALUE NAME], image.data, geo_data, offset=(0,0), threshold=1e-5) 
+  
   HDF.storing_image()
+  
   HDF.close()
  
  
