@@ -191,9 +191,7 @@ Make a FOV image applying a scattering law to compute surface brightness:
   
     return 2e0*cos(x.inc_)/(cos(x.inc_)+cos(x.emi_))
 
-  property_image = Im.broadcast2(ls_disk(Im))
 
-or
 
 ::
   
@@ -203,7 +201,7 @@ or
 
 ::
 
-  property_image = Im.broadcast2() # Accurate but slightly less faster
+  property_image = Im.broadcast2(ls_disk(Im), plot=False) # Accurate but slightly less faster
   
 Images can be saved into FITS format using:
   
@@ -217,6 +215,16 @@ And Imager properties can be saved into npz format:
 
   to_npz('[LABEL]', 'YYYY-MM-DDThh:mm:ss.sss', Im)
 
+If the flux-calibrated image or acquisition is available, the pixel-facet matching can be performed and stored:
 
-
-
+::
+  import numpy as np
+  image = read_image([IMAGE PATH], channel=0)
+  HDF = Store(columns=['dist', 'pha', 'emi', 's', 'inc'], label=[LABEL])    
+  geo_data = np.load([NPZ FILEPATH], mmap_mode='r')
+  HDF.image_dataframe([VALUE NAME], image.data, geo_data, offset=(0,0), threshold=1e-5) 
+  HDF.storing_image()
+  HDF.close()
+ 
+ 
+ 
