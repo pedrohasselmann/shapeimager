@@ -76,33 +76,38 @@ First Usage
 
 First, ensure yourself to have available all required SPICE Kernels, mk files and Digital Terrain Models for your analysis.
 
-In spec.py you must edit the path files:
-
-::
-
-
-  "folder" : Directory of calibrated and aligned images.
-
-  "core"   : Directory of renderings and geo files.
-
-  "aux"    : Directory of auxiliary .dat or .txt files and also .obj Shape Model.
-
-  "kern"   : Directory of NAIF/SPICE Kernels.
-
 
 
 In your script call:
-``from shapeimager import *``
 
-Load SPICE kernels:
+``import shapeimager``
+
+To change the global pathnames, in case your data are not located at same folder as your script:
+::
+
+  shapeimager.folder = [Directory of calibrated and aligned images.]
+
+  shapeimager.core   = [Directory of renderings and geo files.]
+
+  shapeimager.aux    = [Directory of auxiliary .dat or .txt files and also .obj Shape Model.]
+
+  shapeimager.kern   = [Directory of NAIF/SPICE Kernels.]
+
+Whether the pathnames are changed or not, call again:
+
+``from shapeimager.main import *``
+
+
+
+Then, load the SPICE kernels:
 
 ::
 
-  spc = pos.from_spice(body=[BODY CODE],obs=[S/C CODE],ins=[INSTRUMENT CODE])
+  spc = position.from_spice(body=[BODY CODE],obs=[S/C CODE],ins=[INSTRUMENT CODE])
 
   spc.furnish('[FILENAME].mk')
 
-Load the DTM or Shape Model:
+Also, load your DTM or Shape Model:
 
 ::
 
@@ -110,7 +115,7 @@ Load the DTM or Shape Model:
 
   S.normal_vector(True)
 
-It pre-loads the DTM and pre-calculates the normal vectors.
+It pre-loads the DTM and pre-calculates the normal vectors for future speed up.
 
 Chose a date:
 
