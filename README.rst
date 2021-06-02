@@ -57,7 +57,7 @@ Publications with Shapeimager
 ----------------------------
 
  - Hasselmann et al. (2019). Pronounced morphological changes in a southern active zone on comet 67P/Churyumov-Gerasimenko. Astronomy & Astrophysics, Volume 630, id.A8, 19 pp.
- - Hasselmann et al. (2020). Modeling first-order scattering processes from OSIRIS-REx color images of the rough surface of asteroid (101955) Bennu. Submitted to Icarus Journal. Soon.
+ - Hasselmann et al. (2020). Modeling optical roughness and first-order scattering processes from OSIRIS-REx color images of the rough surface of asteroid (101955) Bennu. Icarus 357, 114106. 
 
 
 Installation
