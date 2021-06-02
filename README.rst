@@ -27,8 +27,8 @@ thus can be used for reproducing RGB images of the body in varied perpectives.
 Benchmarks
 ----------
 
-Benchmarks with an image with 1024 x 1024 pixels using OSIRIS-REx SPICE Kernels 
-and the asteroid Bennu shapemodel of 786432 facets performs in less than 20 seconds in general.
+Benchmarks with an image of 1024 x 1024 pixels using NASA/OSIRIS-REx SPICE Kernels 
+and a shape model of asteroid Bennu of 786432 facets perform in less than 20 seconds in general.
 Time variations can arise depending on the asteroid distance, shadowing and shapemodel resolution.
 
 
