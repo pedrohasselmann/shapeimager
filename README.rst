@@ -36,7 +36,7 @@ Time variations can arise depending on the asteroid distance, shadowing and shap
 Requirements
 ------------
 
-Shapeimager 0.1 is built on Python 3.8 using the following packages:
+Shapeimager 1.0.0 is built on Python 3.8 using the following packages:
 
   - Numpy >1.15
   - Pandas >1.0
