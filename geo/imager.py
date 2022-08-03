@@ -151,9 +151,9 @@ class Imager(object):
     '''
        Shape Model in the Camera frame.
     '''
-    assert hasattr(self, 'active')
-    assert hasattr(self, 'occult')
-    assert hasattr(self, 'shaded')
+    assert hasattr(self, 'active_')
+    assert hasattr(self, 'occult_')
+    assert hasattr(self, 'shaded_')
 
     self.v1_v2_, self.d_ = self._camera_framing(cam_matrix, boresight, pos)
 
