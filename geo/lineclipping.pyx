@@ -91,7 +91,7 @@ cdef short _getclip(double xa,
             p |= UPPER  # bitwise OR
         return p
 
-cpdef (double, double, double, double) cohensutherland(double xmin, 
+cdef (double, double, double, double) cohensutherland(double xmin, 
                                                   double ymax, 
                                                   double xmax,
                                                   double ymin, 
@@ -234,9 +234,9 @@ cpdef clipping_loop_c(unsigned int[:,::1] fp,
 
     #intersects[:] = -999.
 
-    #with nogil, parallel(num_threads=thrn):
+    with nogil:#, parallel(num_threads=thrn):
         #j = 0
-    for i in range(N):#, schedule='static'):
+        for i in range(N):#, schedule='static'):
 
             cc[:,:]   = -999.
             rcc[:,:]  = -999.
