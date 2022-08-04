@@ -496,7 +496,7 @@ class Imager(object):
     start = time()
     px_area = clipping_loop_c(self.facet_pix_, 
                               self.v1_v2_[self.facet_pix_[:,2]-1,:,:].copy(order='C'),
-                              self.pix_, 
+                              self.pix_[::-1], 
                               grid_x.copy(order='C'), 
                               grid_y[::-1].copy(order='C')
                               )
@@ -562,7 +562,7 @@ class Imager(object):
      yx = pd.MultiIndex.from_arrays(self.facet_pix_[...,(0,1)].T.astype(uint32), names=('y','x'))
      table = pd.DataFrame(XYZ, columns=('X','Y','Z'), index=yx, dtype=float32)
      for n, c in enumerate(table.columns):
-       XYZ_[n,...] = table_to_image(table[c], self.ccd_[::-1], b=0e0)[::-1]
+       XYZ_[n,...] = table_to_image(table[c], self.ccd_)#[::-1], b=0e0)[::-1]
      #plt.imshow(XYZ_[...,0], interpolation='none')
      #plt.show()
      return XYZ_.astype(float32)
@@ -661,7 +661,7 @@ class Imager(object):
 
     
     # Build image back from pixel position
-    ximage = table_to_image(X_pix, self.ccd_[::-1], b=0e0)[::-1]
+    ximage = table_to_image(X_pix, self.ccd_)#[::-1], b=0e0)[::-1]
     
     
     # plot - test
