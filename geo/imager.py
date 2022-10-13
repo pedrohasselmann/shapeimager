@@ -39,7 +39,7 @@ class Imager(object):
                illuminated=False,
                raytrace=False,
                shaded=0,
-               occ=0,
+               occ=0
                ):
     '''
        Remove non-illuminated facets and hemispherically-hidden facets.
@@ -121,7 +121,11 @@ class Imager(object):
     elif visible == False and  illuminated == False:
       self.active_ = ones(self.inc_.shape[0]).astype(bool_)
 
+    elif visible == None and  illuminated == False:
+      self.active_ = ~c2 
 
+    elif visible == None and  illuminated == True:
+      self.active_ = c1&(~c2)
 
   def _set_raytrace(self, occ, shaded, raytrace, c1, c2):
     # HIDDEN_BY (OCCULTED/OVERLAYED FACETS)
@@ -191,7 +195,8 @@ class Imager(object):
     from numpy import int32, uint32, float32, array, arange, split, array_split, vstack
     from functools import partial
     from time import time
-    
+    import matplotlib.pyplot as plt  
+
     start = time()
     # Partitioning of vertices into pixels/cases (front)
     vert = vert.transpose(2,0,1).reshape(2,-1).copy(order='C') 
@@ -200,14 +205,20 @@ class Imager(object):
     image_vertex = 0
     print('_raster overhead time ', time()-start)
 
+    #plt.imshow(image_vertex.statistic, interpolation='none')
+    #plt.show()
+
     # Rasterization
     start = time()
     image, facet_pix  = raster_c((0,vert_pix.shape[2]),
                                 vert_pix, 
                                 facetid.copy(order='C'), 
-                                frame, 
+                                frame[::-1], 
                                 mode)
     print('_raster computation time ', time()-start)
+
+    #plt.imshow(image, interpolation='none')
+    #plt.show()
 
     if facet_pix.shape[0] == 0:
         raise Exception("No facets are visible or illuminated.")
@@ -432,8 +443,8 @@ class Imager(object):
     qua = FOV[4]
 
     if FOV[0] == "RECTANGLE":
-      print('FOV window (rad)', (qua[:,1].max()-qua[:,1].min()), 
-                                (qua[:,0].max()-qua[:,0].min()))
+      print('FOV window (rad)', (qua[:,0].max()-qua[:,0].min()), 
+                                (qua[:,1].max()-qua[:,1].min()))
     
       self.pix_ = (
                    (qua[:,0].max()-qua[:,0].min())/ccd[0], 
@@ -466,7 +477,7 @@ class Imager(object):
                                    (grid_y, grid_x),
                                    mode=u'pixelation')
     facet_pix[:,0] = ccd[1] -facet_pix[:,0] -1
-    
+
     if FOV[0] == "CIRCLE":
       a=ccd[1]/2
       b=ccd[0]/2
@@ -491,13 +502,13 @@ class Imager(object):
     from .lineclipping import clipping_loop_c
     from time import time
 
-    #print('#facets on the frame: ', self.facet_pix_[:,2].shape)
+    print('#facets on the frame: ', self.facet_pix_[:,2].shape)
   
     start = time()
     px_area = clipping_loop_c(self.facet_pix_, 
                               self.v1_v2_[self.facet_pix_[:,2]-1,:,:].copy(order='C'),
                               self.pix_[::-1], 
-                              grid_x.copy(order='C'), 
+                              grid_x.copy(order='C'),
                               grid_y[::-1].copy(order='C')
                               )
     print('clipping computation time ', time() -start)
@@ -507,6 +518,7 @@ class Imager(object):
     self.facet_pix_ = self.facet_pix_[px_area[:,1]!=0.]
     
     print('#facets on the frame (empty removed): ', self.facet_pix_[:,2].shape)
+    #input("hold on")
 
 
 
@@ -558,11 +570,11 @@ class Imager(object):
      #plt.show()
      
      # To image format:
-     XYZ_ = zeros((3, self.ccd_[0], self.ccd_[1]), dtype=float32)
-     yx = pd.MultiIndex.from_arrays(self.facet_pix_[...,(0,1)].T.astype(uint32), names=('y','x'))
+     XYZ_ = zeros((3, self.ccd_[1], self.ccd_[0]), dtype=float32)
+     yx = pd.MultiIndex.from_arrays(self.facet_pix_[...,(0,1)].T.astype(uint32), names=('x','y'))
      table = pd.DataFrame(XYZ, columns=('X','Y','Z'), index=yx, dtype=float32)
      for n, c in enumerate(table.columns):
-       XYZ_[n,...] = table_to_image(table[c], self.ccd_)#[::-1], b=0e0)[::-1]
+       XYZ_[n,...] = table_to_image(table[c], self.ccd_, b=0e0).T#[::-1], b=0e0)[::-1]
      #plt.imshow(XYZ_[...,0], interpolation='none')
      #plt.show()
      return XYZ_.astype(float32)
@@ -643,26 +655,25 @@ class Imager(object):
     
     start = time()
     # Data Frame: Convert pixel position to string ndarray to preserve unicity
-    df = pd.DataFrame(self.facet_pix_, columns=('y','x','f'))
+    df = pd.DataFrame(self.facet_pix_, columns=('x','y','f'))
     df['a'] = self.facet_area_pix_[:,1]/(self.pix_[0]*self.pix_[1])
     #print(df.query('a>{}'.format(thresh),inplace=False).head(50))
-    df.sort_values(['y','x'], ascending=[True, True], inplace=True, kind='mergesort')
+    df.sort_values(['x','y'], ascending=[True, True], inplace=True, kind='mergesort')
     #print(df.head(50))
 
     # Precise value of X per pixel
     X_pix = weighted_average_c(df.to_numpy(dtype=float32).copy(order='C'), 
                                            X[df['f']-1].astype(float32).copy(order='C')
                                            )
-    print('broadcast computation time ',time() -start)
+
     # To multi-index DataFrame
-    idx = pd.MultiIndex.from_arrays(X_pix[1:,(0,1)].astype(uint32).T, names=['y', 'x'])
+    idx = pd.MultiIndex.from_arrays(X_pix[1:,(0,1)].astype(uint32).T, names=['x', 'y'])
     X_pix = pd.Series(X_pix[1:,2], index=idx)
     #print(X_pix)
-
     
     # Build image back from pixel position
-    ximage = table_to_image(X_pix, self.ccd_)#[::-1], b=0e0)[::-1]
-    
+    ximage = table_to_image(X_pix, self.ccd_, b=0e0).T#[::-1], b=0e0)[::-1]
+    print('broadcast computation time ',time() -start)
     
     # plot - test
     if plot:

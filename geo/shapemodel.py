@@ -24,10 +24,10 @@ from ..main import *
 ############################ SHAPE MODEL TOOL #################################
 class ShapeModel(object):
 
-  def __init__(self,shapefile, comments=0):
+  def __init__(self,shapefile, comments=0, pickle=True):
     import itertools
     from glob import glob
-    from numpy import float32, int32, uint32, array, split, savez, load, unique
+    from numpy import float32, int32, uint32, fabs, array, split, savez, load, unique, where, delete
     
     npz = path.join(home,aux,shapefile.split('.')[0]+'.npz')
     shapefile = path.join(home,aux,shapefile)
@@ -40,7 +40,7 @@ class ShapeModel(object):
           self.vertices_ = f["vertices"].copy(order='C')
           self.facets_   = f["facets"].copy(order='C')
           self.array_    = f["array3D"]
-          self.facet_index_ = f["facet_index"]
+          self.facet_index_ = f["facet_index"].astype(uint32).copy(order='C')
 
     else:
       if shapefile[-3:].lower() == 'obj':
@@ -55,6 +55,11 @@ class ShapeModel(object):
       if shapefile[-3:].lower() == 'ver':
         self.load_ver(shapefile)
 
+    # LICIACube - Cone re-orientation
+    #self.vertices_[:,0] = -self.vertices_[:,0]
+    #self.vertices_[:,1] = -self.vertices_[:,1]
+
+
     if len(glob(npz))==0:
       # Final database format : 3D-array packing all triangle vertices
       vertices = pd.DataFrame(self.vertices_, index=range(self.vertices_.shape[0]), columns=['X','Y','Z'])
@@ -65,7 +70,8 @@ class ShapeModel(object):
       self.facet_index_ = unique(df.index).astype(uint32)+1
       self.array_ = array(split(df.values, len(self.facet_index_)), order='C', dtype=float32)
     
-      savez(npz,
+      if pickle == True:
+        savez(npz,
           vertices=self.vertices_.copy(order='C'),
           facets=self.facets_.copy(order='C'),
           array3D=self.array_,
@@ -390,7 +396,7 @@ class ShapeModel(object):
 
   def distance(self, o):
      from numpy import float32, sqrt, sum
-     return sqrt(sum((self.array_-o)**2, axis=1))
+     return sqrt(sum((self.array_-o)**2, axis=2))
 
 
 
@@ -515,6 +521,119 @@ class ShapeModel(object):
 
 
 
+################
+### PATCHING ###
+################
+  def patches(self, n, semiaxis, seed=121189, plot=False, save=True):
+        '''
+        '''
+        from scipy import stats
+        from scipy.spatial import transform
+        from numpy import random, linspace, arange, ones, dstack, newaxis, \
+        fabs, sqrt, argmin, diag, cross, zeros, log, radians, degrees, \
+        arccos, cos, sin, savez, isnan, isinf
+
+        # load shape model
+        S = load_shapemodel(shafile)
+        vecs = self.array_.mean(1)
+
+        # generate random points in the space : https://tutorial.math.lamar.edu/Classes/CalcIII/EqnsOfLines.aspx
+        rnd = random.RandomState(seed)
+        v = 2*rnd.rand(n,3) -1.
+        print(v)
+
+        # trace line connecting the points to the shape model origin
+        t = linspace(0,2,100)
+        x = v[:,0]*t[:,None]
+        y = v[:,1]*t[:,None]
+        z = v[:,2]*t[:,None]
+        lines = dstack((x,y,z))
+        print(lines.shape)
+
+        # from traced line, selected the closest facets
+        samp = list()
+        probs = zeros(S.array_.shape[0])
+        z = array((0.,0.,1.))
+        semiaxis = diag(semiaxis)
+        for j in range(n):
+                l = lines[:,j,:]
+                subt  = sqrt((vecs[:, newaxis] -l)**2).sum(2).min(1)
+                print(subt.shape)
+                idx = argmin(subt)
+                print(idx)
+                vc = vecs[idx,:]
+                nv = self.n_[idx,:]
+                print('vc', vc, v[j,:])
+                print('nv', nv)
+
+                # from distribution around points, project to shape model
+                # build covariance: 
+                #https://math.stackexchange.com/questions/1956699/getting-a-transformation-matrix-from-a-normal-vector
+                #https://robotics.stackexchange.com/questions/2556/how-to-rotate-covariance
+                rotaxis = cross(nv, z)
+                rotrad = arccos(nv.dot(z))
+                print('rotaxis ',rotaxis)
+                print('rotrad ', degrees(rotrad),' deg')
+
+                quat = cos(0.5*rotrad)*array([1., 0., 0., 0.])
+                quat[1:] = rotaxis[::-1]*sin(0.5*rotrad+1e-8)
+                R = transform.Rotation.from_quat(quat)
+                print('R ', R.as_matrix())
+                cov = R.as_matrix() @ semiaxis @ R.as_matrix().T
+                print('cov ',cov)
+
+                # Probility distribution of the patch
+                distr = stats.multivariate_normal(vc, cov, random_state=seed, allow_singular=True)
+                #print(distr.pdf(vc))
+                prob = distr.pdf(vecs)
+                #print('prob j = {} : '.format(j), prob)
+                #print('probs max min : ', prob.max(), prob.min())
+                samp.extend(distr.rvs(size=100))
+
+                probs = probs + fabs(prob)
+                # end loop
+
+        prob_weight = fabs(1e0/log(probs))
+        prob_weight[isinf(prob_weight)] = 0.0
+
+        samp = array(samp)
+        print('sampling : ', samp.shape)
+        print('prob total : ', prob_weight)
+        print('probs max mean min : ', prob_weight.max(), prob_weight.mean(), probs.min())
+
+        if plot == True:
+              import plotly.graph_objects as go
+              import trimesh
+
+              fig = go.Figure(data=[go.Scatter3d(
+              x=samp[:,0],
+              y=samp[:,1],
+              z=samp[:,2],
+              mode='markers',
+              marker=dict(
+              size=8,
+              colorscale='Viridis',   # choose a colorscale
+              opacity=0.8
+              )
+              )])
+              fig.add_trace(go.Mesh3d(
+                        x=S.vertices_[:, 0], 
+                        y=S.vertices_[:, 1], 
+                        z=S.vertices_[:, 2],
+                        i=S.facets_[:, 0],
+                        j=S.facets_[:, 1],
+                        k=S.facets_[:, 2],
+                        intensity=fabs(1e0/probs), 
+                        colorscale='Spectral', 
+                        opacity=.5,
+                        flatshading=True,
+                        #lighting=dict(specular=0.2),
+                        alphahull=1))
+              fig.show()
+
+
+        if save == True: savez('patches_gaussians_n{}_{}'.format(n, shafile[:-4]), values=prob_weight)
+        return prob_weight
 
 
 
